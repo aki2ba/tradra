@@ -35,9 +35,25 @@ YOUTUBE_API_KEY=your_actual_api_key_here
 
 ## 使用方法
 
+### ローカル実行
+
 ```bash
-python main.py
+# 仮想環境をアクティベート
+source venv/bin/activate  # Linux/Mac
+# または
+venv\Scripts\activate     # Windows
+
+# 実行
+python main.py "検索キーワード" "出力ファイル名.csv"
+
+# 例
+python main.py "神谷 参政党 政治" "results.csv"
 ```
+
+### GitHub Actions での実行
+
+1. GitHubリポジトリの「Actions」タブでワークフローを実行
+2. 詳細は `.github/README.md` を参照
 
 ## 出力
 

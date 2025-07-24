@@ -1,0 +1,55 @@
+name: YouTube Analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      keywords:
+        description: 'Search keywords (space-separated)'
+        required: true
+        type: string
+        default: '参政党 選挙 政治'
+      output_filename:
+        description: 'Output CSV filename'
+        required: true
+        type: string
+        default: 'youtube_analysis_results.csv'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run YouTube analysis
+      env:
+        YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      run: |
+        python main.py "${{ github.event.inputs.keywords }}" "${{ github.event.inputs.output_filename }}"
+        
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: analysis-results
+        path: ${{ github.event.inputs.output_filename }}
+        retention-days: 30
+        
+    - name: Display summary
+      run: |
+        echo "Analysis completed!"
+        echo "Keywords: ${{ github.event.inputs.keywords }}"
+        echo "Output file: ${{ github.event.inputs.output_filename }}"
+        if [ -f "${{ github.event.inputs.output_filename }}" ]; then
+          echo "Total entries: $(tail -n +2 "${{ github.event.inputs.output_filename }}" | wc -l)"
+        fi
