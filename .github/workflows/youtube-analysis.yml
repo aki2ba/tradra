@@ -17,13 +17,15 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    # 特定のユーザーのみ実行可能
+    if: github.actor == 'aki2ba'
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
         
@@ -39,7 +41,7 @@ jobs:
         python main.py "${{ github.event.inputs.keywords }}" "${{ github.event.inputs.output_filename }}"
         
     - name: Upload results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: analysis-results
         path: ${{ github.event.inputs.output_filename }}
