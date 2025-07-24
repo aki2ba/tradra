@@ -40,8 +40,8 @@ def main():
     print(f"Output file: {output_filename}")
     print("=" * 50)
     
-    # Check if .env file exists
-    if not os.path.exists('.env'):
+    # Check if .env file exists (skip check if running in GitHub Actions)
+    if not os.path.exists('.env') and not os.getenv('GITHUB_ACTIONS'):
         print("Error: .env file not found!")
         print("Please create a .env file with your YouTube API key:")
         print("YOUTUBE_API_KEY=your_api_key_here")
